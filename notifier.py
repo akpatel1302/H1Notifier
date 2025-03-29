@@ -10,13 +10,13 @@ from selenium.webdriver.common.by import By
 from dotenv import load_dotenv
 
 # Configurar logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # Cargar variables de entorno
 load_dotenv()
-SENDER_EMAIL = os.getenv('EMAIL_USER')
-SENDER_PASSWORD = os.getenv('EMAIL_PASS')
-RECEIVER_EMAIL = os.getenv('EMAIL_RECEIVER')
+SENDER_EMAIL = os.getenv("EMAIL_USER")
+SENDER_PASSWORD = os.getenv("EMAIL_PASS")
+RECEIVER_EMAIL = os.getenv("EMAIL_RECEIVER")
 
 if not all([SENDER_EMAIL, SENDER_PASSWORD, RECEIVER_EMAIL]):
     logging.error("Faltan variables de entorno en el archivo .env")
@@ -24,9 +24,9 @@ if not all([SENDER_EMAIL, SENDER_PASSWORD, RECEIVER_EMAIL]):
 
 # Configurar Selenium
 options = webdriver.ChromeOptions()
-options.add_argument('--headless')  # Modo sin interfaz gráfica
-options.add_argument('--no-sandbox')
-options.add_argument('--disable-dev-shm-usage')
+options.add_argument("--headless")  # Modo sin interfaz gráfica
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
 
 driver = webdriver.Chrome(options=options)
 
@@ -35,71 +35,60 @@ XPATH_BASE = "/html/body/div[2]/div/div/main/div/div[2]/div/div[2]/div/div/div/d
 
 LATEST_PROGRAM_FILE = "latest_program.json"
 
+
 def load_last_program():
-    """Carga el último programa detectado desde un archivo JSON, manejando casos donde el archivo está vacío."""
+    """Carga el último programa detectado desde un archivo JSON."""
     if os.path.exists(LATEST_PROGRAM_FILE):
         try:
-            # Verificar si el archivo está vacío
-            if os.path.getsize(LATEST_PROGRAM_FILE) == 0:
-                logging.info("Archivo JSON vacío. Iniciando desde cero.")
-                return None
-            
             with open(LATEST_PROGRAM_FILE, "r") as f:
                 data = json.load(f)
                 return data.get("latest_program")
-        except json.JSONDecodeError:
-            logging.error("El archivo JSON está corrupto o mal formado. Iniciando desde cero.")
-            return None
-        except Exception as e:
-            logging.error(f"Error cargando JSON: {e}")
+        except (json.JSONDecodeError, FileNotFoundError):
             return None
     return None
 
+
 def save_last_program(program_name):
     """Guarda el último programa detectado en un archivo JSON."""
-    try:
-        with open(LATEST_PROGRAM_FILE, "w") as f:
-            json.dump({"latest_program": program_name}, f)
-    except Exception as e:
-        logging.error(f"Error guardando JSON: {e}")
+    with open(LATEST_PROGRAM_FILE, "w") as f:
+        json.dump({"latest_program": program_name}, f)
+
 
 def send_email(subject, body):
-    """Enviar notificación por correo electrónico"""
+    """Enviar notificación por correo electrónico."""
     try:
         mensaje = EmailMessage()
-        mensaje['Subject'] = subject
-        mensaje['From'] = SENDER_EMAIL
-        mensaje['To'] = RECEIVER_EMAIL
-        mensaje.set_content(body, subtype='html')
+        mensaje["Subject"] = subject
+        mensaje["From"] = SENDER_EMAIL
+        mensaje["To"] = RECEIVER_EMAIL
+        mensaje.set_content(body, subtype="html")
 
-        with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
+        with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
             smtp.starttls()
             smtp.login(SENDER_EMAIL, SENDER_PASSWORD)
             smtp.send_message(mensaje)
             logging.info("Correo de notificación enviado correctamente.")
-            #sys.exit(0)  # Terminar el script después de enviar el correo - SOLO ES PARA LOCAL
     except Exception as e:
         logging.error(f"Error enviando correo: {e}")
-        #sys.exit(1)  # Terminar el script - error. No se envió el correo - esto solo es PARA LOCAL
 
-logging.info("Iniciando monitoreo de nuevos programas en HackerOne...")
-latest_program = load_last_program()
 
+# Ejecutar monitoreo
 try:
-    while True:
-        driver.get(URL)
-        time.sleep(5)  # Esperar carga de página
-        
-        try:
-            first_program_element = driver.find_element(By.XPATH, XPATH_BASE.format(1))
-            first_program_name = first_program_element.text.strip() # obtenemos el nombre del primer programa
-            first_program_link = first_program_element.get_attribute("href") # obtenemos el enlace del primer programa
-            
-            if latest_program is None:
-                latest_program = first_program_name
-                logging.info(f"Programa actual encontrado: {first_program_name}")
-                save_last_program(latest_program)
-                send_email(
+    driver.get(URL)
+    time.sleep(5)  # Esperar carga de página
+
+    try:
+        first_program_element = driver.find_element(By.XPATH, XPATH_BASE.format(1))
+        first_program_name = first_program_element.text.strip()
+        first_program_link = first_program_element.get_attribute("href")
+
+        latest_program = load_last_program()
+
+        if latest_program is None:
+            latest_program = first_program_name
+            logging.info(f"Programa actual encontrado: {first_program_name}")
+            save_last_program(latest_program)
+            send_email(
     "Bug Hunter jf0x0r, primer programa detectado",
     f"""
     <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; background: #f9fafb; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); text-align: center;">
@@ -115,13 +104,10 @@ try:
     </div>
     """
 )
-
-            # Si el nombre del primer programa es diferente al último guardado
-            elif first_program_name != latest_program:
-                logging.info(f"Último programa registrado: {latest_program}")
-                latest_program = first_program_name
-                save_last_program(latest_program)
-                send_email(
+        elif first_program_name != latest_program:
+            logging.info(f"Nuevo programa encontrado: {first_program_name}")
+            save_last_program(first_program_name)
+            send_email(
     "Bug Hunter jf0x0r, ¡Nuevo programa en HackerOne!",
     f"""
     <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; background: #f9fafb; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); text-align: center;">
@@ -137,10 +123,9 @@ try:
     </div>
     """
 )
-
-            else:
-                logging.info("No hay nuevos programas.")
-                send_email(
+        else:
+            logging.info("No hay nuevos programas.")
+            send_email(
     "Bug Hunter jf0x0r, sin novedades",
     f"""
     <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 20px; background: #f9fafb; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); text-align: center;">
@@ -153,15 +138,8 @@ try:
     """
 )
 
-        
-        except Exception as e:
-            logging.error(f"Error al extraer información: {e}")
-        
-        time.sleep(600)  # Revisar cada 10 minutos
+    except Exception as e:
+        logging.error(f"Error al extraer información: {e}")
 
-except KeyboardInterrupt:
-    logging.info("Script detenido por el usuario.")
-    driver.quit()
-except Exception as e:
-    logging.error(f"Error inesperado: {e}")
-    driver.quit()
+finally:
+    driver.quit()  # Cerrar el driver correctamente
