@@ -1,0 +1,32 @@
+name: Ejecutar Notificador de HackerOne
+
+on:
+  schedule:
+    - cron: "0 */3 * * *"  # Ejecuta cada 3 horas
+  workflow_dispatch:  # Permite ejecución manual
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Clonar el repositorio
+        uses: actions/checkout@v4
+
+      - name: 🐍 Configurar Python 3.13.2
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13.2"
+
+      - name: 📦 Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 🔑 Configurar variables de entorno
+        run: echo "EMAIL_USER=${{ secrets.EMAIL_USER }}" >> $GITHUB_ENV && \
+             echo "EMAIL_PASS=${{ secrets.EMAIL_PASS }}" >> $GITHUB_ENV && \
+             echo "EMAIL_RECEIVER=${{ secrets.EMAIL_RECEIVER }}" >> $GITHUB_ENV
+
+      - name: 🚀 Ejecutar script de monitoreo
+        run: python notifier.py
