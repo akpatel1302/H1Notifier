@@ -1,61 +1,43 @@
-Overview
+# 🚀 HackerOne Notifier
 
-HackerOne Notifier is an automated bot that monitors new programs launched on HackerOne and sends email notifications whenever a new program is detected. The process is fully automated using GitHub Actions and runs every 3 hours.
+## ⭐ Support the Project
 
-📌 Features
+If you find this project useful, please give it a star ⭐ to help others discover it!
 
-Uses Selenium to scrape HackerOne’s program directory.
+### Overview
 
-Sends email notifications when new programs are detected.
+HackerOne Notifier is an automated bot that monitors new programs launched on HackerOne and sends email notifications whenever a new program is detected. The process is fully automated using GitHub Actions and runs every **3 hours**.
 
-Runs on GitHub Actions every 3 hours automatically.
+## 📌 Features
+- Uses Selenium to scrape HackerOne’s program directory.
+- Sends email notifications when new programs are detected.
+- Runs on **GitHub Actions** every 3 hours automatically.
+- Supports manual execution via GitHub Actions' workflow dispatch.
+- Deploys seamlessly with GitHub Actions without requiring manual setup.
 
-Supports manual execution via GitHub Actions' workflow dispatch.
+## ⚙️ Setup & Configuration
 
-⚙️ Setup & Configuration
+#### 1️⃣ Fork the Repository
+```sh
+git clone https://github.com/JFOZ1010/H1Notifier.git
+cd H1Notifier
+```
 
-1️⃣ Clone the Repository
-
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-cd YOUR_REPOSITORY
-
-2️⃣ Add Secrets in GitHub
-
+#### 2️⃣ Add Secrets in GitHub
 You must configure the following GitHub Secrets in your repository:
+1. Navigate to Settings > Secrets and variables > Actions.
+2. Click "New repository secret" and add the above secrets.
+![settings-SECRETS](https://github.com/user-attachments/assets/0f2d45dc-65f4-4a60-a6aa-427a4eafe446)
 
-Secret Name
-
-Description
-
-EMAIL_USER
-
-Sender's email address
-
-EMAIL_PASS
-
-Email password or app-specific password
-
-EMAIL_RECEIVER
-
-Recipient email address
-
-How to set secrets in GitHub:
-
-Go to your GitHub repository.
-
-Navigate to Settings > Secrets and variables > Actions.
-
-Click "New repository secret" and add the above secrets.
 
 3️⃣ (Optional) Using Gmail as Sender
 
 If you are using a personal Gmail account, you need to enable Less Secure Apps or generate an App Password (recommended).
 
-Go to Google App Passwords.
+<img width="691" alt="imagen" src="https://github.com/user-attachments/assets/985ad1d5-a8a6-4dec-8236-3697cf576a26" />
 
-Generate a password and use it as EMAIL_PASS.
 
-🚀 Running the Script
+## 🚀 Running the Script
 
 🔹 Automatic Execution (GitHub Actions)
 
@@ -67,18 +49,24 @@ You can also trigger it manually in the Actions tab by selecting "Run workflow".
 
 If you want to test the script locally, install the dependencies:
 
+```bash
 pip install -r requirements.txt
-
+```
 Then run the script:
-
+```bash
 python notifier.py
+```
 
-📜 License
+⚡ GitHub Actions Workflow
 
-This project is licensed under the MIT License.
+1. Go to Actions in your repository.
+2. Select the workflow and click "Run workflow".
+![githubActions](https://github.com/user-attachments/assets/1c63228f-fb33-446e-992c-e64a0796e784)
 
-🔥 Contributing
+# 🙌 Acknowledgments
+
+Created with ❤️ by JFOZ1010. If you find this project helpful, consider giving it a ⭐ and sharing it with others!
+
+### 🔥 Contributing
 
 Feel free to open issues or pull requests if you find improvements or bugs!
-
-⭐ Star this repo if you find it useful!
