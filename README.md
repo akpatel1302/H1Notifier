@@ -50,8 +50,14 @@ You can also trigger it manually in the Actions tab by selecting "Run workflow".
 If you want to test the script locally, install the dependencies:
 
 ```bash
+python3 -m venv venv
+source venv/bin/activate;
 pip install -r requirements.txt
 ```
+> Do not forget to create your `.env` file with the EMAIL_USER, EMAIL_PASS, EMAIL_RECEIVER credentials.
+> ![env-credentials](https://github.com/user-attachments/assets/7680abe7-3802-4273-9cef-410196939107)
+
+
 Then run the script:
 ```bash
 python notifier.py
@@ -61,7 +67,7 @@ python notifier.py
 
 1. Go to Actions in your repository.
 2. Select the workflow and click "Run workflow".
-![githubActions](https://github.com/user-attachments/assets/1c63228f-fb33-446e-992c-e64a0796e784)
+![githubActions](https://github.com/user-attachments/assets/f252837e-79ff-438f-ada8-8aa6543feb19)
 
 # 🙌 Acknowledgments
 
