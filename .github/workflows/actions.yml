@@ -8,36 +8,37 @@ on:
 jobs:
   run-script:
     runs-on: ubuntu-latest
-    
-    steps:
-      - name: 📥 Clonar el repositorio
-        uses: actions/checkout@v4
 
-      - name: 📂 Descargar último estado (latest_program.json)
-        uses: actions/download-artifact@v4
-        with:
-          name: latest-program
-          path: .  # Descarga en el directorio raíz
+  steps:
+    - name: 📥 Clonar el repositorio
+      uses: actions/checkout@v4
 
-      - name: 🐍 Configurar Python 3.13.2
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.13.2"
+    - name: 📂 Descargar último estado (latest_program.json)
+      uses: actions/download-artifact@v4
+      continue-on-error: true  # No fallar si el artefacto no existe
+      with:
+        name: latest-program
+        path: .  # Descarga en el directorio raíz
 
-      - name: 📦 Instalar dependencias
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+    - name: 🐍 Configurar Python 3.13.2
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13.2"
 
-      - name: 🚀 Ejecutar script de monitoreo
-        env:
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-          EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
-        run: python notifier.py
+    - name: 📦 Instalar dependencias
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-      - name: 📂 Guardar el estado actualizado (latest_program.json)
-        uses: actions/upload-artifact@v4
-        with:
-          name: latest-program
-          path: latest_program.json  # Guarda el archivo actualizado
+    - name: 🚀 Ejecutar script de monitoreo
+      env:
+        EMAIL_USER: ${{ secrets.EMAIL_USER }}
+        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+        EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
+      run: python notifier.py
+
+    - name: 📂 Guardar el estado actualizado (latest_program.json)
+      uses: actions/upload-artifact@v4
+      with:
+        name: latest-program
+        path: latest_program.json  # Guarda el archivo actualizado
