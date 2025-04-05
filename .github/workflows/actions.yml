@@ -13,6 +13,12 @@ jobs:
       - name: 📥 Clonar el repositorio
         uses: actions/checkout@v4
 
+      - name: 📂 Descargar último estado (latest_program.json)
+        uses: actions/download-artifact@v4
+        with:
+          name: latest-program
+          path: .  # Descarga en el directorio raíz
+
       - name: 🐍 Configurar Python 3.13.2
         uses: actions/setup-python@v5
         with:
@@ -28,4 +34,10 @@ jobs:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
           EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
-        run: python notifier.py #Corremos nuestro bot, el cual se encargara de enviar los correos
+        run: python notifier.py
+
+      - name: 📂 Guardar el estado actualizado (latest_program.json)
+        uses: actions/upload-artifact@v4
+        with:
+          name: latest-program
+          path: latest_program.json  # Guarda el archivo actualizado
