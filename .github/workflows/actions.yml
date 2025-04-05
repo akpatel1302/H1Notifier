@@ -2,11 +2,11 @@ name: Ejecutar Notificador de HackerOne
 
 on:
   schedule:
-    - cron: "0 */3 * * *"  # Cada 3 horas
+    - cron: "0 */3 * * *"  # Cada 3 horas, por ahora lo veo conveniente. 
   workflow_dispatch:  # Ejecución manual
 
 permissions:
-  contents: write  # 🔐 Permite push al repositorio
+  contents: write  # 🔐 con esto permito push a mi repo
 
 jobs:
   run:
@@ -14,13 +14,6 @@ jobs:
     steps:
       - name: 📥 Clonar el repositorio
         uses: actions/checkout@v4
-
-      - name: 📂 Intentar descargar último estado (si existe)
-        continue-on-error: true
-        uses: actions/download-artifact@v4
-        with:
-          name: latest-program
-          path: .
 
       - name: 🐍 Configurar Python
         uses: actions/setup-python@v5
@@ -33,18 +26,12 @@ jobs:
 
       - name: 🚀 Ejecutar script de monitoreo
         env:
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }} #obvio que no lo voy a poner aqui a texto plano XD
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
           EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
         run: python notifier.py
 
-      - name: 📤 Subir estado actualizado como artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: latest-program
-          path: latest_program.json
-
-      - name: 🔄 Commit y push de latest_program.json al repositorio
+      - name: 🔄 Commit y push de latest_program.json al repositorio #mejor así me ahorro el bororó de los Artifacts en Github Actions
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
