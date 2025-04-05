@@ -1,5 +1,20 @@
 # 🚀 HackerOne Notifier
 
+![logo-h1](https://github.com/user-attachments/assets/06ffd2e2-f298-48fc-a731-7e0d9e75712b)
+
+## Inspiration
+
+_*For me, hacking is about persistence, creativity, and pushing boundaries in the most elegant way possible.*_
+
+> The code is art, like music and other creative fields. I created H1-Notifier out of passion and love for coding. Writing code is not just a habit, it's discipline, focus, and a way of life. Throughout this project, I constantly listened to these tracks:
+> 
+> - [Agua y Ensalada](https://www.youtube.com/watch?v=OeqjLSCVKvU) - Luis7Lunes: "El rap es la cura y también viene en pasta, la balanza se inclina pa'l que poco se descansa, mejor duerma lo suficiente."
+> - [Uno](https://www.youtube.com/watch?v=xEx7t7PqR2A) - Ali Aka Mind: "Así que vamos mano no bajes el ritmo please, me lo digo yo a mí mismo cuando todo pinta gris. Yo no hago rap pa' ser el mejor MC del país, yo solo hago lo que puedo pa' ver mi negra feliz."
+
+Contributing to the infosec community — researchers, hackers, and builders — inspires me to give my best in every line of code I write.
+
+> Always the same creative hacker, but more evolved. - [Juan Felipe Oz](https://x.com/PwnedRar_)
+
 ## ⭐ Support the Project
 
 If you find this project useful, please give it a star ⭐ to help others discover it!
