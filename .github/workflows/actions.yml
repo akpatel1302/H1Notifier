@@ -26,9 +26,8 @@ jobs:
 
       - name: 🚀 Ejecutar script de monitoreo
         env:
-          EMAIL_USER: ${{ secrets.EMAIL_USER }} #claro variables de entorno, que dijo navidad? v: 
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-          EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }} #Claro, variables de entorno, que dijo navidad? v: 
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python notifier.py
 
       - name: 🔄 Commit y push de latest_program.json al repositorio #Con esto me ahorro el bug que tenía con Artifacts en github actions, más persistente asi. 
